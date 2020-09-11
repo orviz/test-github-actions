@@ -20,10 +20,18 @@ jobs:
               with:
                   branch: jenkins/release/test
               if: "!env.BRANCH_EXISTS"
+
             - name: Merge JePL branch in jenkins/release/test
-              uses: devmasx/merge-branch@v1.3.0
-              with:
-                  type: now
-                  from_branch: JePL
-                  target_branch: jenkins/release/test
-                  github_token: ${{ github.token }}
+              run: |
+                  git config user.name github-actions
+                  git config user.email github-actions@github.com
+                  git checkout jenkins/release/test
+                  git checkout origin/JePL .sqa/config.yml .sqa/docker-compose.yml Jenkinsfile
+                  git status
+                  git diff-index --quiet HEAD || (git commit -m "Added JePL configuration files" && git push)
+              #uses: devmasx/merge-branch@v1.3.0
+              #with:
+              #    type: now
+              #    from_branch: JePL
+              #    target_branch: jenkins/release/test
+              #    github_token: ${{ github.token }}
