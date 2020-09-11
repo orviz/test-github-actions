@@ -11,24 +11,19 @@ jobs:
               with:
                 fetch-depth: 0
             - name: Find out if jenkins/release/<release-no> exists
-              #uses: srt32/git-actions@v0.0.3
-              #with:
-              #    args: git branch -r | grep jenkins/release/test
               run: |
                   echo ::set-env name=BRANCH_EXISTS::$(git branch -r | grep jenkins/release/test)
-                  # Write-Output "::set-output name=BRANCH_EXISTS::$branch_exists"
             - name: Create jenkins/release/test
               uses: peterjgrainger/action-create-branch@v1.0.0
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
-                  branch: jenkins/release/test3
-              #if: env.BRANCH_EXISTS != true
+                  branch: jenkins/release/test
               if: "!env.BRANCH_EXISTS"
-                  #            - name: Merge JePL branch in jenkins/release/*
-                  #              uses: devmasx/merge-branch@v1.3.0
-                  #              with:
-                  #                  type: now
-                  #                  from_branch: JePL
-                  #                  target_branch: jenkins/release/test
-                  #                  github_token: ${{ github.token }}
+            - name: Merge JePL branch in jenkins/release/test
+              uses: devmasx/merge-branch@v1.3.0
+              with:
+                  type: now
+                  from_branch: JePL
+                  target_branch: jenkins/release/test
+                  github_token: ${{ github.token }}
