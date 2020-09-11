@@ -8,8 +8,8 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Builds stable branch when closing a milestone
+              uses: peterjgrainger/action-create-branch@v1.0.0
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  with:
-                      branch: 'release-notes'
-              uses: peterjgrainger/action-create-branch@v1.0.0
+              with:
+                  branch: 'release-notes'
