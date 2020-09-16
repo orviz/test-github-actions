@@ -35,6 +35,3 @@ jobs:
                   git checkout origin/JePL .sqa/config.yml .sqa/docker-compose.yml Jenkinsfile
                   git status
                   git diff-index --quiet HEAD || (git commit -m "Added JePL configuration files" && git push)
-            - name: Check where we are
-              run: |
-                  git branch
