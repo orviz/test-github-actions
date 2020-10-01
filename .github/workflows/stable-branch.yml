@@ -13,6 +13,7 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
                   branch: stable/${{ github.event.milestone.title }}
+              if: "!github.event.milestone.title"
             - name: Align content with release/${{ github.event.milestone.title }}
               run: |
                 git config user.name github-actions
