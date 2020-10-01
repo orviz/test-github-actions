@@ -14,6 +14,10 @@ jobs:
               with:
                   branch: stable/${{ github.event.milestone.title }}
               if: "!github.event.milestone.title"
+            - name: Fetch new jenkins/release/${{ github.event.milestone.title }}
+              uses: actions/checkout@v2
+              with:
+                ref: stable/${{ github.event.milestone.title }}
             - name: Align content with release/${{ github.event.milestone.title }}
               run: |
                 git checkout stable/${{ github.event.milestone.title }}
