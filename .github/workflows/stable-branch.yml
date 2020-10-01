@@ -7,6 +7,10 @@ jobs:
         name: Builds stable branch when closing a milestone
         runs-on: ubuntu-latest
         steps:
+            - name: Fetch full history
+              uses: actions/checkout@v2
+              with:
+                fetch-depth: 0
             - name: Builds stable branch when closing a milestone
               uses: peterjgrainger/action-create-branch@v1.0.0
               env:
@@ -14,7 +18,7 @@ jobs:
               with:
                   branch: stable/${{ github.event.milestone.title }}
               if: "!github.event.milestone.title"
-            - name: Fetch new jenkins/release/${{ github.event.milestone.title }}
+            - name: Fetch new stable/${{ github.event.milestone.title }}
               uses: actions/checkout@v2
               with:
                 ref: stable/${{ github.event.milestone.title }}
