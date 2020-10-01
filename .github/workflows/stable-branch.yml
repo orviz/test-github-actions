@@ -28,4 +28,5 @@ jobs:
                 git config user.email github-actions@github.com
                 git reset --hard origin/release/${{ github.event.milestone.title }}
                 git status
+                git pull
                 git diff-index --quiet HEAD || (git commit -m "Align content with release branch" && git push)
