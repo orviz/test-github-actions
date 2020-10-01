@@ -16,6 +16,7 @@ jobs:
               if: "!github.event.milestone.title"
             - name: Align content with release/${{ github.event.milestone.title }}
               run: |
+                git checkout stable/${{ github.event.milestone.title }}
                 git config user.name github-actions
                 git config user.email github-actions@github.com
                 git reset --hard origin/release/${{ github.event.milestone.title }}
