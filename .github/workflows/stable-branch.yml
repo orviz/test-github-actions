@@ -12,21 +12,7 @@ jobs:
               with:
                 fetch-depth: 0
             - name: Builds stable branch when closing a milestone
-              uses: peterjgrainger/action-create-branch@v1.0.0
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              with:
-                  branch: stable/${{ github.event.milestone.title }}
-              if: "!github.event.milestone.title"
-            - name: Fetch new stable/${{ github.event.milestone.title }}
-              uses: actions/checkout@v2
-              with:
-                ref: stable/${{ github.event.milestone.title }}
-            - name: Align content with release/${{ github.event.milestone.title }}
               run: |
-                git config user.name github-actions
-                git config user.email github-actions@github.com
-                git reset --hard origin/release/${{ github.event.milestone.title }}
-                git status
-                git pull
-                git diff-index --quiet HEAD || (git commit -m "Align content with release branch" && git push)
+                git checkout release/${{ github.event.milestone.title }}
+                git checkout -b stable/${{ github.event.milestone.title }}
+                git push origin stable/${{ github.event.milestone.title }}
