@@ -1,0 +1,24 @@
+name: Create jenkins/stable/* on pushes to stable/* branches
+on:
+  push:
+    branches:
+      - 'stable/**'
+jobs:
+    create_jenkins_stable_branch:
+        name: Creates jenkins/stable/* branch from associated jenkins/release/* branch
+        runs-on: ubuntu-latest
+        steps:
+          - name: Fetch full history
+            uses: actions/checkout@v2
+            with:
+              fetch-depth: 0
+          - name: Get release version from branch name
+            run: |
+              echo ::set-env name=BRANCH_NAME::$(git rev-parse --abbrev-ref HEAD | cut -d '/' -f2)
+          - name: Update
+            run: |
+              git checkout jenkins/stable/${{ env.BRANCH_NAME }}
+              git reset --hard origin/stable/${{ env.BRANCH_NAME }}
+              git checkout origin/JePL .sqa/config.yml .sqa/docker-compose.yml Jenkinsfile
+              git status
+              git diff-index --quiet HEAD || (git commit -m "Added JePL configuration files" && git push)
