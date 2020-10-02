@@ -1,4 +1,4 @@
-name: Test
+name: Builds stable branch when closing a milestone
 on:
   milestone:
     types: [closed]
@@ -7,12 +7,26 @@ jobs:
         name: Builds stable branch when closing a milestone
         runs-on: ubuntu-latest
         steps:
-            - name: Fetch full history
-              uses: actions/checkout@v2
-              with:
-                fetch-depth: 0
-            - name: Builds stable branch when closing a milestone
-              run: |
-                git checkout release/${{ github.event.milestone.title }}
-                git checkout -b stable/${{ github.event.milestone.title }}
-                git push origin stable/${{ github.event.milestone.title }}
+          - name: Filter milestone by name
+            run: |
+              echo "RELEASE_MILESTONE=$(echo ${{ github.event.milestone.title }} | grep '^[0-9]*\.[0-9]\.[0-9]')" >> $GITHUB_ENV
+          - name: Print milestone version
+            run: |
+              echo $RELEASE_MILESTONE
+          - name: Fetch full history
+            uses: actions/checkout@v2
+            with:
+              fetch-depth: 0
+            if: "env.RELEASE_MILESTONE"
+          - name: Creates stable branch from associated release
+            run: |
+              git checkout release/${{ env.RELEASE_MILESTONE }}
+              git checkout -b stable/${{ env.RELEASE_MILESTONE }}
+              git push origin stable/${{ env.RELEASE_MILESTONE }}
+            if: "env.RELEASE_MILESTONE"
+          - name: Creates jenkins/stable branch from associated jenkins/release
+            run: |
+              git checkout jenkins/release/${{ env.RELEASE_MILESTONE }}
+              git checkout -b jenkins/stable/${{ env.RELEASE_MILESTONE }}
+              git push origin jenkins/stable/${{ env.RELEASE_MILESTONE }}
+            if: "env.RELEASE_MILESTONE"
